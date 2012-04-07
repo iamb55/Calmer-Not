@@ -1,5 +1,5 @@
 from flaskext.mail import Mail
-from flask import Flask, request, session, render_template, redirect, url_for, flash
+from flask import Flask, request, session, render_template, redirect, url_for, flash, jsonify
 from models import User
 
 app = Flask(__name__)
@@ -30,8 +30,8 @@ def login():
 
 def authenticate(e, p):
     user = User.query.filter_by(email=e).first()
+    # TODO: check if verified
     return None if user is None or not user.check_password_hash(p) else user
-
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -46,3 +46,16 @@ def register():
     session['user_id'] = user.id
 
     return redirect(url_for('app.home'))
+
+@app.route('/validate')
+def validate():
+    word = request.args.get('word') 
+    base = request.args.get('base') 
+    # are letters in word in base?
+    in_base = reduce(lambda acc, c : (c in base) and acc, word, True)
+    # is word a valid english word?
+    if (word in words or words in six) and in_base:
+        return jsonify(valid=True)
+    else:
+        return jsonify(valid=False)
+
