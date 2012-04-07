@@ -1,5 +1,5 @@
 from flaskext.mail import Mail, Message
-from flask import Flask, request, session, render_template, redirect, url_for, flash, jsonify
+from flask import request, session, render_template, redirect, url_for, flash, jsonify
 from models import User, Game, app, db
 from redis import Redis
 import random
@@ -16,6 +16,12 @@ for line in open("six.txt"):
 
 for line in open("words.txt"):
     words.add(line[:-1])
+
+r.set(poscore, 0)
+r.set(pzscore, 0)
+r.set(hmscore, 0)
+r.set(scscore, 0)
+r.set(cmscore, 0)
 
 @app.route('/')
 def index():
@@ -105,6 +111,35 @@ def authenticate(e, p):
     user = User.query.filter_by(email=e).first()
     # TODO: check if verified
     return None if user is None or not user.check_password_hash(p) else user
+
+@app.route("/finish"), methods=['POST']
+def finish():
+    gameID = request.form.get("gameID")
+    firstWon = request.form.get("gameID")
+    game = Game.query.get(gameID)
+    if firstWon:
+        winner = User.query.get(game.u1)
+        loser = User.query.get(game.u2)
+    else:
+        winner = User.query.get(game.u2)
+        loser = User.query.get(game.u1)
+    winner.score += 1
+    winner.gamesPlayed += 1
+    loser.gamesPlayed += 1
+    db.session.add(winner)
+    db.session.add(loser)
+    db.session.commit()
+    if (school == "po"):
+        r.incr(poscore)
+    elif(school == "pz"):
+        r.inc(pzscore)
+    elif(school == "hm"):
+        r.inc(hmscore)
+    elif(school == "sc"):
+        r.inc(scscore)
+    elif(school == "cm"):
+        r.inc(cmscore)
+    return jsonify(success=True)
 
 def sendConfirmation(id,email):
     confkey = generateUnique(32)
