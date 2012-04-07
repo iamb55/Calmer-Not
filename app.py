@@ -16,6 +16,8 @@ if os.environ.has_key('REDISTOGO_URL'):
 
 r = Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], db=0, password=app.config['REDIS_PASSWORD'])
 
+base_url = 'http://warm-cloud-8555.herokuapp.com'
+
 six = set()
 words = set()
 
@@ -168,7 +170,7 @@ def finish():
 
 def sendConfirmation(id,email):
     confkey = generateUnique(32)
-    body = '<p>Please confirm your email address by clicking <a href="/confirm?confkey=%s">here</a></p>'  % (confkey)
+    body = '<p>Please confirm your email address by clicking <a href="%s/confirm?confkey=%s">here</a></p>'  % (base_url, confkey)
     subj = '5C Word Warp - Email Confirmation'
 
     r.set(confkey,id)
