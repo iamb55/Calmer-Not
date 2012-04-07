@@ -20,7 +20,15 @@ for line in open("words.txt"):
 @app.route('/')
 def index():
     if session.get("user_id") != None:     
-        pass
+        return redirect(url_for('stats'))
+    return render_template('index.html')
+
+
+@app.route('/stats')
+def stats():
+    if session.get("user_id") != None:     
+        return render_template('stats.html')
+    
 
 @app.route('/login', methods=["POST"])
 def login():
@@ -59,7 +67,7 @@ def register():
 
 @app.route('/validate')
 def validate():
-    word = request.args.get('word') 
+    word = request.args.get('guess') 
     base = request.args.get('base') 
     # are letters in word in base?
     in_base = reduce(lambda acc, c : (c in base) and acc, word, True)
