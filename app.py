@@ -222,8 +222,8 @@ def nextGame(mySchool):
         del games[3]
     elif (mySchool == "sc"):
         del games[4]
-    game = map (int, game)
-    return min(game)
+    games = map (int, games)
+    return min(games)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
