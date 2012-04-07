@@ -131,7 +131,7 @@ def newGame():
     next = nextGame(currentUser.school)
     if next == None:
         score = None
-        word = random.sample(six)[0]
+        word = random.sample(six, 1)[0]
     else:
         game = Game.query.get(next)
         word = game.letters
