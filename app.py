@@ -116,6 +116,8 @@ def confirm():
 
     user = User.query.get(id)
     user.verified = True
+    db.session.add(user)
+    db.session.commit()
     session['user_id'] = user.id
     flash('Your email address is confirmed! Thanks!')
     return redirect(url_for('stats'))
