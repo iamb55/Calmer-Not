@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block script %}
+<script src="/static/game.js">
+</script>
+<script type='text/javascript'>
+    $(document).ready(function () { 
+        $('#game').hide();
+        var g = Game({{ game_id }}, {{ word }}, '#game', '#counter', '#wordList', '#score');
+        $('#startButton').click(function() {
+            $(this).hide();
+            g.start();  
+        });
+        $('#wordForm').submit(function() {
+            g.guess($('#wordInput').val());
+        });
+
+    });
+</script>
+{% endblock %}
+{% block content %}
+<div id='container'>
+<button type='button' id='startButton'>Start Game</button>
+<div id='game'>
+    <div id='counter'></div>
+    <div id='score'></div>
+    <ul id='base'>
+    {% for char in word %}
+        <li id='base{{ loop.index0 }}'></div>
+    {% endfor %}
+    </ul>
+
+    <form id="wordForm" autocomplete="off">
+    Word: <input type="text" name="word" id="wordInput"/><br />
+    </form>
+
+    <ul id='wordList'></ul>
+
+</div>
+</div>
+{% endblock %}

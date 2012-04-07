@@ -1,0 +1,29 @@
+{% block content %}
+<h1>5C Word Attack</h1>
+
+<div class="score-to-beat"></div>
+
+<div class="timer"></div>
+
+<ul class="word-row">
+<li class="letter">1</li>
+<li class="letter">2</li>
+<li class="letter">3</li>
+<li class="letter">4</li>
+<li class="letter">5</li>
+<li class="letter">6</li>
+</ul>
+
+<form id="wordForm" autocomplete="off">
+Word: <input type="text" name="word" id="wordInput"/><br />
+</form>
+
+<ul class="word list">
+</ul>
+
+<script type="text/javascript">
+  $(document).ready( function()  {
+    $('#wordInput').focus();
+  });
+</script>
+{% endblock %}
