@@ -111,11 +111,22 @@ def authenticate(e, p):
     # TODO: check if verified
     return None if user is None or not user.check_password_hash(p) else user
 
-def win(school):
-    currentUser = User.query.get(session.get("user_id"))
-    user.score += 1
-    user.gamesPlayed += 1
-    db.session.add(user)
+@app.route("/finish"), methods=['POST']
+def finish():
+    gameID = request.form.get("gameID")
+    firstWon = request.form.get("gameID")
+    game = Game.query.get(gameID)
+    if firstWon:
+        winner = User.query.get(game.u1)
+        loser = User.query.get(game.u2)
+    else:
+        winner = User.query.get(game.u2)
+        loser = User.query.get(game.u1)
+    winner.score += 1
+    winner.gamesPlayed += 1
+    loser.gamesPlayed += 1
+    db.session.add(winner)
+    db.session.add(loser)
     db.session.commit()
     if (school == "po"):
         r.incr(poscore)
@@ -127,22 +138,7 @@ def win(school):
         r.inc(scscore)
     elif(school == "cm"):
         r.inc(cmscore)
-
-def lose(school):    
-    currentUser = User.query.get(session.get("user_id"))
-    user.gamesPlayed += 1
-    db.session.add(user)
-    db.session.commit()
-    if (school == "po"):
-        r.incr(poscore)
-    elif(school == "pz"):
-        r.inc(pzscore)
-    elif(school == "hm"):
-        r.inc(hmscore)
-    elif(school == "sc"):
-        r.inc(scscore)
-    elif(school == "cm"):
-        r.inc(cmscore)
+    return jsonify(success=True)
 
 def sendConfirmation(id,email):
     confkey = generateUnique(32)
