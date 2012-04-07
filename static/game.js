@@ -6,7 +6,7 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
     var $counter = $(counterId);
     var $list = $(listId);
     var $score = $(scoreId);
-    var counter = 60;
+    var counter = 10;
     var words = [];
     var prevGuesses = {};
     var score = 0;
@@ -33,7 +33,7 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
         start: function() {
             console.log("Starting the game...");
             $score.html(0);
-            $counter.html(10);
+            $counter.html(counter);
             $('#base').show();
             $game.show();
             var that = this;
@@ -48,7 +48,7 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
             }
         },
         finish: function() {
-            $.post('/finish', {'score': score, 'game': gameNo}, function(data) {
+            $.post('/finish', {'score': score, 'gameID': gameNo}, function(data) {
                 if (data.success) {
                     console.log('callback from /endgame');
                     console.log(score);
