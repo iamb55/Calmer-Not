@@ -222,8 +222,8 @@ def nextGame(mySchool):
         del games[3]
     elif (mySchool == "sc"):
         del games[4]
-    games = map(lambda x: -1 if x is None else int(x), games)
-    return min(games)
+    games = map(int, filter(lambda x: x != None, games))
+    return None if len(games) == 0 else min(games)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
