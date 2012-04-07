@@ -1,12 +1,14 @@
 from flaskext.mail import Mail
 from flask import Flask, request, session, render_template, redirect, url_for, flash
 from models import User
+from redis import Redis
 
 app = Flask(__name__)
 app.config.from_object('settings')
 
 db = SQLAlchemy(app)
 mail = Mail(app)
+r = Redis()
 
 @app.route('/')
 def index():
@@ -46,3 +48,20 @@ def register():
     session['user_id'] = user.id
 
     return redirect(url_for('app.home'))
+
+
+def nextGame(mySchool):
+    games = [r.lindex(po, 0), r.lindex(pz, 0), r.lindex(cm, 0), r.lindex(hm, 0), r.lindex(sc, 0)]
+    if (mySchool == "po"):
+        del games[0]
+    elif (mySchool == "pz"):
+        del games[1]
+    elif (mySchool == "cm"):
+        del games[2]
+    elif (mySchool == "hm"):
+        del games[3]
+    elif (mySchool == "sc"):
+        del games[4]
+    game = map (int, game)
+    return min(game)
+        
