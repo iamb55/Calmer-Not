@@ -150,14 +150,34 @@ def authenticate(e, p):
 @app.route("/finish", methods=['POST'])
 def finish():
     gameID = request.form.get("gameID")
-    firstWon = request.form.get("gameID")
+    score = request.form.get("score")
     game = Game.query.get(gameID)
-    if firstWon:
+    if game.u1 is None:
+        game.u1 = session['user_id']
+        user = User.query.get(session['user_id'])
+        game.u1Score = score
+        # put on queue
+        r.rpush(user.school, game.id)
+        db.session.add(game)
+        db.session.commit()
+        return jsonify(success=True)
+    elif game.u2 is None:
+        game.u2 = session['user_id']
+        game.u2Score = score
+        db.session.add(game)
+        db.session.commit()
+        return jsonify(success=True)
+
+    if game.u1Score >= score:
         winner = User.query.get(game.u1)
         loser = User.query.get(game.u2)
+        # we don't care about keeping the actual game data around anymore
+        db.session.delete(game)
     else:
         winner = User.query.get(game.u2)
         loser = User.query.get(game.u1)
+        # we don't care about keeping the actual game data around anymore
+        db.session.delete(game)
     winner.score += 1
     winner.gamesPlayed += 1
     loser.gamesPlayed += 1
