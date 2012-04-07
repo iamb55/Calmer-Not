@@ -30,9 +30,11 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
 
     return {
         start: function() {
+            console.log("Starting the game...");
             $score.html(0);
             $counter.html(60);
             $('#base').show();
+            $game.show();
             setTimeout(this.updateCountdown, 1000);
         },
         updateCountdown: function() {
