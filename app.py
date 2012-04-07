@@ -139,7 +139,7 @@ def newGame():
     else:
         game = Game.query.get(next)
         word = game.letters
-        score = game.score
+        score = game.u1Score
     return render_template("game.html", word=word, score=score, game_id=game.id)
 
 def authenticate(e, p):
