@@ -64,8 +64,8 @@ def stats():
         hmscore = float(hmscore) / total
         scscore = float(scscore) / total
         cmscore = float(cmscore) / total
-
-        return render_template('stats.html', wins=user.score, percent=user.score/user.gamesPlayed, games=user.gamesPlayed,
+        gamesPlayed = 1 if user.gamesPlayed == 0 else user.gamesPlayed
+        return render_template('stats.html', wins=user.score, percent=user.score/gamesPlayed, games=user.gamesPlayed,
                                 po=poscore, pz=pzscore, hm=hmscore, sc=scscore, cm=cmscore)
     
 @app.route('/logout')
