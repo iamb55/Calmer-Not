@@ -24,6 +24,8 @@ class User(db.Model):
         self.email = email
         self.set_password(password)
         self.verified = False
+        self.score = 0
+        self.gamesPlayed = 0
 
     def __repr__(self):
         return '<User %s>' % self.email
