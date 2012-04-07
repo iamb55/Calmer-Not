@@ -73,7 +73,7 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
             words.push(theGuess);
             prevGuesses[theGuess] = true;
             var i = words.length - 1;
-            $list.prepend('<div class="row"> <div class="span1" id=word' + i + '>' + theGuess + '</div></div>');
+            $list.prepend('<div class="row"> <div class="span1 offset1" id=word' + i + '>' + theGuess + '</div></div>');
             validate(theGuess, i);
         }
     }; 
