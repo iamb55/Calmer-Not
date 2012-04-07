@@ -1,6 +1,6 @@
 from flaskext.mail import Mail
 from flask import Flask, request, session, render_template, redirect, url_for, flash
-from models import User
+from models import User, Game
 from redis import Redis
 
 app = Flask(__name__)
@@ -12,6 +12,7 @@ r = Redis()
 
 @app.route('/')
 def index():
+    if session.get("user_id") != None:     
     pass
 
 @app.route('/login', methods=["POST"])
@@ -49,6 +50,21 @@ def register():
 
     return redirect(url_for('app.home'))
 
+@app.route('/newgame', methods=['POST'])        
+def newGame():
+    if session.get("user_id") == None:     
+        return redirect(url_for("index"))
+    currentUser = User.query.get(session.get("user_id"))
+    next = nextGame(currentUser.school)
+    if next == None:
+        score = None
+        
+    else:
+        game = Game.query.get(next)
+        word = game.letters
+        score = game.score
+    return render_template("game.html", word, score)
+
 
 def nextGame(mySchool):
     games = [r.lindex(po, 0), r.lindex(pz, 0), r.lindex(cm, 0), r.lindex(hm, 0), r.lindex(sc, 0)]
@@ -65,3 +81,4 @@ def nextGame(mySchool):
     game = map (int, game)
     return min(game)
         
+    
