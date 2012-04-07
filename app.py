@@ -1,13 +1,9 @@
-from flaskext.mail import Mail
+from flaskext.mail import Mail, Message
 from flask import Flask, request, session, render_template, redirect, url_for, flash
-from models import User, Game
+from models import User, Game, app, db
 from redis import Redis
 import random
 
-app = Flask(__name__)
-app.config.from_object('settings')
-
-db = SQLAlchemy(app)
 mail = Mail(app)
 r = Redis()
 six = set()
@@ -22,7 +18,7 @@ for line in open("words.txt"):
 @app.route('/')
 def index():
     if session.get("user_id") != None:     
-    pass
+        pass
 
 @app.route('/login', methods=["POST"])
 def login():
@@ -47,17 +43,85 @@ def authenticate(e, p):
 
 @app.route('/register', methods=['POST'])
 def register():
-    school = request.form.get('school')
+    error = None
     email = request.form.get('email')
     password = request.form.get('password')
+
+    school = emailAuth(email)
+    if not school:
+        error = 'Invalid email address'
 
     user = User(school,email,password)
     db.session.add(user)
     db.session.commit()
 
+    sendConfirmation(user.id,email)
+
     session['user_id'] = user.id
 
-    return redirect(url_for('app.home'))
+    return redirect(url_for('index'),error=error)
+
+def sendConfirmation(id,email):
+    confkey = generateUnique(32,r)
+
+    link = '<p><a href=%s/confirm?confkey=%s' % (base_url,confkey)
+    body = '<p>Please confirm your email address by clicking the link below:</p>' + link
+    subj = '5C Word Warp - Email Confirmation'
+
+    r.set(confkey,id)
+
+    msg = Message(html=body,subject=subj,recipients=[email])
+    mail.send(msg)
+
+
+def generate(length):
+    randomData = os.urandom(length)
+    return hashlib.sha512(randomData).hexdigest() 
+
+def generateUnique(length, model):
+    r = generate(length)
+    while not unique(r, model):
+        r = generate(length)
+    return r
+
+def unique(r, model):
+    existing = model.get(r)
+    return existing == None
+
+
+@app.route('/confirm', methods=['GET'])
+def confirm():
+    error = None
+    key = request.args.get('confkey')
+
+    if key == None:
+        error = 'Invalid confirmation key' 
+    id = r.get(key)
+    if id == None:
+        error = 'No such user'
+
+    user = User.query.get(id)
+    user.verified = True
+    flash('Your email address is confirmed! Thanks!')
+    return redirect(url_for('index'),error=error)
+
+
+def emailAuth(e):
+    e = e.lower()
+    school = None
+
+    if e.endswith('pomona.edu'):
+        school = 'po'
+    elif e.endswith('hmc.edu'):
+        school = 'hm'
+    elif e.endwith('pitzer.edu'):
+        school = 'pz'
+    elif e.endswith('scrippscollege.edu'):
+        school = 'sc'
+    elif e.endswith('cmc.edu') or e.endswith ('claremontmckenna.edu'):
+        school = 'cm'
+
+    return school
 
 @app.route('/newgame', methods=['POST'])        
 def newGame():
@@ -89,5 +153,3 @@ def nextGame(mySchool):
         del games[4]
     game = map (int, game)
     return min(game)
-        
-    
