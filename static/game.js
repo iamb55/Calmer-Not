@@ -53,7 +53,7 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
                     if (data.first) {
                         $('#modehead').html('Nice work!');
                         $('#modebody').html('We\'re waiting for an opponent to finsh this game.');
-                    } else if (win) {
+                    } else if (data.win) {
                         $('#modehead').html('Congratulations!');
                         $('#modebody').html('You won! Way to go.');
                     } else {

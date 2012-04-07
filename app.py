@@ -63,8 +63,9 @@ def stats():
         hmscore = float(hmscore) / total
         scscore = float(scscore) / total
         cmscore = float(cmscore) / total
-        gamesPlayed = 1 if user.gamesPlayed == 0 else user.gamesPlayed
-        return render_template('stats.html', wins=user.score, percent=user.score/gamesPlayed, games=user.gamesPlayed,
+        gamesPlayed = float(1 if user.gamesPlayed == 0 else user.gamesPlayed)
+        
+        return render_template('stats.html', wins=user.score, percent=float(user.score)/gamesPlayed, games=user.gamesPlayed,
                                 po=poscore, pz=pzscore, hm=hmscore, sc=scscore, cm=cmscore)
     
 @app.route('/logout')
@@ -180,7 +181,7 @@ def finish():
         r.rpush(user.school, game.id)
         db.session.add(game)
         db.session.commit()
-        return jsonify(success=True,first=True)
+        return jsonify(success=True,first=True,win=False)
     elif game.u2 is None:
         game.u2 = session['user_id']
         game.u2Score = score
