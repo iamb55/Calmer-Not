@@ -38,13 +38,14 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
             setTimeout(this.updateCountdown, 1000);
         },
         updateCountdown: function() {
+            var that = this;
             counter -= 1;
             $counter.html(counter);
             if (counter <= 0) {
                 this.finish(); 
             }
             else {
-                setTimeout(this.updateCountdown, 1000);
+                setTimeout(function() { that.updateCountdown }, 1000);
             }
         },
         finish: function() {
