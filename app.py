@@ -211,7 +211,7 @@ def emailAuth(e):
     return school
 
 def nextGame(mySchool):
-    games = [r.lindex(po, 0), r.lindex(pz, 0), r.lindex(cm, 0), r.lindex(hm, 0), r.lindex(sc, 0)]
+    games = [r.lindex('po', 0), r.lindex('pz', 0), r.lindex('cm', 0), r.lindex('hm', 0), r.lindex('sc', 0)]
     if (mySchool == "po"):
         del games[0]
     elif (mySchool == "pz"):
