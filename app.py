@@ -82,6 +82,7 @@ def confirm():
 
     user = User.query.get(id)
     user.verified = True
+    session['user_id'] = user.id
     flash('Your email address is confirmed! Thanks!')
     return redirect(url_for('index'),error=error)
 
@@ -98,7 +99,7 @@ def newGame():
         game = Game.query.get(next)
         word = game.letters
         score = game.score
-    return render_template("game.html", word, score)
+    return render_template("game.html", word=word, score=score, game_id=game.id)
 
 def authenticate(e, p):
     user = User.query.filter_by(email=e).first()
