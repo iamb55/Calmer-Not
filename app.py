@@ -160,7 +160,7 @@ def finish():
 def sendConfirmation(id,email):
     confkey = generateUnique(32)
 
-    link = '<p><a href=%s/confirm?confkey=%s' % (base_url,confkey)
+    link = '<p><a href=/confirm?confkey=%s' % (confkey)
     body = '<p>Please confirm your email address by clicking the link below:</p>' + link
     subj = '5C Word Warp - Email Confirmation'
 
