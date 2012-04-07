@@ -35,18 +35,17 @@ r.set('cmscore', 0)
 def index():
     if session.get("user_id") != None:     
         return redirect(url_for('stats'))
-    return render_template('index.html')
-
+    if session.get('error'): 
+        error = session.pop('error')
+    return render_template('index.html', error=error)
 
 @app.route('/stats')
 def stats():
     if session.get("user_id") != None:     
         return render_template('stats.html')
     
-
 @app.route('/login', methods=["POST"])
 def login():
-    error = None
     email = request.form.get('email')
     password = request.form.get('password')
     user = authenticate(email, password)
@@ -57,18 +56,18 @@ def login():
         return redirect(url_for('stats'))
     # invalid u or p
     else:
-        error = 'Your email or password was wrong'
-    return render_template(url_for('index'), error=error)
+        session['error'] = 'Your email or password was wrong'
+        return render_template(url_for('index'))
 
 @app.route('/register', methods=['POST'])
 def register():
-    error = None
     email = request.form.get('email')
     password = request.form.get('password')
 
     school = emailAuth(email)
     if not school:
-        error = 'Invalid email address'
+        session['error'] = 'Invalid email address'
+        return redirect(url_for('index'))
 
     user = User(school,email,password)
     db.session.add(user)
@@ -77,7 +76,7 @@ def register():
     sendConfirmation(user.id,email)
 
     session['user_id'] = user.id
-    return redirect(url_for('index'),error=error)
+    return redirect(url_for('index'))
 
 @app.route('/validate')
 def validate():
@@ -93,20 +92,21 @@ def validate():
 
 @app.route('/confirm', methods=['GET'])
 def confirm():
-    error = None
     key = request.args.get('confkey')
 
     if key == None:
-        error = 'Invalid confirmation key' 
+        session['error'] = 'Invalid confirmation key' 
+        return redirect(url_for('index'))
     id = r.get(key)
     if id == None:
-        error = 'No such user'
+        session['error'] = 'No such user'
+        return redirect(url_for('index'))
 
     user = User.query.get(id)
     user.verified = True
     session['user_id'] = user.id
     flash('Your email address is confirmed! Thanks!')
-    return redirect(url_for('stats'),error=error)
+    return redirect(url_for('stats'))
 
 @app.route('/newgame', methods=['POST'])        
 def newGame():
