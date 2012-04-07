@@ -1,21 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Stats</h1>
+<div class="row">
+    <div class='span4 offset4'>
+        <h1>Stats</h1>
+    </div>
+</div>
 
+<div class="row">
+    <div class='span8 offset2'>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
-    <ul class='flashes'>
     {% for message in messages %}
-      <li>{{ message }}</li>
+    <div class='alert alert-success'>
+        <a class="close" data-dismiss="alert">×</a>
+          {{ message }}
+    </div>
     {% endfor %}
-    </ul>
   {% endif %}
 {% endwith %}
+    </div>
+</div>
 
+<div class="row">
+    <div class='span8 offset2'>
 {% if error %}
-<p>{{ error }}</p>
+<div class='alert alert-error'>
+<a class="close" data-dismiss="alert">×</a>
+{{ error }}
+</div>
 {% endif %}
+    </div>
+</div>
 
-<p>Stats!</p>
-<a href="{{ url_for('newGame') }}">New Game</a>
+<div class="row">
+    <div class='span8 offset2'>
+        <h4>Your Stats</h4>
+        <p>Games played: {{ games }}</p>
+        <p>Games won: {{ wins }}</p>
+        <div class="progress progress-success">
+            <div class="bar" style="width: {{percent*100}}%;"></div>
+        </div>
+
+        <h4>College Stats</h4>
+        <p>Pomona</p>
+        <div class="progress progress-info">
+            <div class="bar" style="width: {{po*100}}%;"></div>
+        </div>
+        <p>CMC</p>
+        <div class="progress progress-info">
+            <div class="bar" style="width: {{cm*100}}%;"></div>
+        </div>
+        <p>Harvey Mudd</p>
+        <div class="progress progress-success">
+            <div class="bar" style="width: {{hm*100}}%;"></div>
+        </div>
+        <p>Pitzer</p>
+        <div class="progress progress-success">
+            <div class="bar" style="width: {{pz*100}}%;"></div>
+        </div>
+        <p>Scripps</p>
+        <div class="progress progress-success">
+            <div class="bar" style="width: {{sc*100}}%;"></div>
+        </div>
+        <a class="btn btn-success" href="{{ url_for('newGame') }}">New Game</a>
+    </div>
+</div>
 {% endblock %}
+
+
