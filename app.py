@@ -235,19 +235,18 @@ def emailAuth(e):
     return school
 
 def nextGame(mySchool):
-    games = [r.lindex('po', 0), r.lindex('pz', 0), r.lindex('cm', 0), r.lindex('hm', 0), r.lindex('sc', 0)]
-    if (mySchool == "po"):
-        del games[0]
-    elif (mySchool == "pz"):
-        del games[1]
-    elif (mySchool == "cm"):
-        del games[2]
-    elif (mySchool == "hm"):
-        del games[3]
-    elif (mySchool == "sc"):
-        del games[4]
-    games = map(int, filter(lambda x: x != None, games))
-    return None if len(games) == 0 else min(games)
+    other_schools = [x for x in ('po','pz','cm','hm','sc') if x != mySchool]
+    games = []
+    for school in other_schools:
+        games.append((r.lindex(school, 0), school))
+     
+    games = filter(lambda (x,y) : x != None, games)
+    if len(games) == 0:
+        return None
+    else:
+        x, y = min(games)
+        r.lpop(y)
+        return int(x)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
