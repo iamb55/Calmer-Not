@@ -123,7 +123,7 @@ def confirm():
     flash('Your email address is confirmed! Thanks!')
     return redirect(url_for('stats'))
 
-@app.route('/newgame', methods=['POST'])        
+@app.route('/newgame', methods=['GET'])        
 def newGame():
     if session.get("user_id") == None:     
         return redirect(url_for("index"))
