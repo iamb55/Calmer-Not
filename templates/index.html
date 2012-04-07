@@ -16,15 +16,15 @@
 <p>Error: {{ error }}</p>
 {% endif %}
 
-<p>Login</p>
-<form id="login" action="{{url_for('login')}}" method="post">
+<p class="span2 offset1">Login</p>
+<form class="span2 offset1" id="login" action="{{url_for('login')}}" method="post">
 Email: <input type="text" name="email" id="wordInput"/><br />
 Password: <input type="password" name="password" id="wordInput"/><br />
 <input type="submit"/>
 </form>
 
-<p>Register</p>
-<form id="register" action="{{url_for('register')}}" method="post">
+<p class="span2 offset1">Register</p>
+<form class="span2 offset1" id="register" action="{{url_for('register')}}" method="post">
 Email: <input type="text" name="email" id="wordInput"/><br />
 Password: <input type="password" name="password" id="wordInput"/><br />
 <input type="submit"/>
