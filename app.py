@@ -114,6 +114,7 @@ def confirm():
         session['error'] = 'No such user'
         return redirect(url_for('index'))
 
+    r.delete(key)
     user = User.query.get(id)
     user.verified = True
     db.session.add(user)
