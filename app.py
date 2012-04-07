@@ -180,20 +180,21 @@ def finish():
         r.rpush(user.school, game.id)
         db.session.add(game)
         db.session.commit()
-        return jsonify(success=True)
+        return jsonify(success=True,first=True)
     elif game.u2 is None:
         game.u2 = session['user_id']
         game.u2Score = score
         db.session.add(game)
         db.session.commit()
-        return jsonify(success=True)
 
     if game.u1Score >= score:
+        won=False
         winner = User.query.get(game.u1)
         loser = User.query.get(game.u2)
         # we don't care about keeping the actual game data around anymore
         db.session.delete(game)
     else:
+        won=True
         winner = User.query.get(game.u2)
         loser = User.query.get(game.u1)
         # we don't care about keeping the actual game data around anymore
@@ -204,6 +205,7 @@ def finish():
     db.session.add(winner)
     db.session.add(loser)
     db.session.commit()
+    school = winner.school
     if (school == "po"):
         r.incr('poscore')
     elif(school == "pz"):
@@ -214,7 +216,7 @@ def finish():
         r.inc('scscore')
     elif(school == "cm"):
         r.inc('cmscore')
-    return jsonify(success=True)
+    return jsonify(success=True,win=won,first=False)
 
 def sendConfirmation(id,email):
     confkey = generateUnique(32)
