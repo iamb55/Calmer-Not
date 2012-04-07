@@ -5,6 +5,7 @@
 <script type='text/javascript'>
     $(document).ready(function () { 
         $('#game').hide();
+        $('#over').hide();
         var g = Game({{ game_id }}, '{{ word }}', '#game', '#counter', '#wordList', '#score');
         $('#startButton').click(function() {
             $(this).hide();
@@ -39,7 +40,7 @@
 
 </div>
 </div>
-<div class="modal" id="over">
+<div class="modal fade" id="over">
   <div class="modal-header">
     <h3 id = "modehead"></h3>
   </div>
