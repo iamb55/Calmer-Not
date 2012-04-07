@@ -6,10 +6,11 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
     var $counter = $(counterId);
     var $list = $(listId);
     var $score = $(scoreId);
-    var counter = 60;
+    var counter = 10;
     var words = [];
     var prevGuesses = {};
     var score = 0;
+    var interval;
     $('#base').hide();
     for (var i = 0; i < base.length; i++) {
         $('#base' + i).html(base[i]);
@@ -25,28 +26,29 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
             else {
                 $('#word' + index).addClass('invalid');
             }
-        }
-    }
+        });
+    };
 
     return {
         start: function() {
+            console.log("Starting the game...");
             $score.html(0);
-            $counter.html(60);
+            $counter.html(counter);
             $('#base').show();
-            setTimeout(this.updateCountdown, 1000);
+            $game.show();
+            var that = this;
+            interval = setInterval(function() { that.updateCountdown(that); }, 1000);
         },
-        updateCountdown: function() {
+        updateCountdown: function(that) {
             counter -= 1;
             $counter.html(counter);
             if (counter <= 0) {
-                this.finish(); 
-            }
-            else {
-                setTimeout(this.updateCountdown, 1000);
+                that.finish(); 
+                clearInterval(interval);
             }
         },
         finish: function() {
-            $.post('/finish', {'score': score, 'game': gameNo}, function(data) {
+            $.post('/finish', {'score': score, 'gameID': gameNo}, function(data) {
                 if (data.success) {
                     console.log('callback from /endgame');
                     console.log(score);
@@ -63,8 +65,6 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
             $list.prepend('<li id=word' + i + '>' + theGuess + '</li>');
             validate(theGuess, i);
         }
-
-
-    } 
+    }; 
 }
 

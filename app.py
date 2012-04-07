@@ -153,11 +153,15 @@ def newGame():
     next = nextGame(currentUser.school)
     if next == None:
         score = None
-        word = random.sample(six)[0]
+        w = random.sample(six, 1)[0]
+        word = ''.join(random.sample(w,len(w)))
+        game = Game(word)
+        db.session.add(game)
+        db.session.commit()
     else:
         game = Game.query.get(next)
         word = game.letters
-        score = game.score
+        score = game.u1Score
     return render_template("game.html", word=word, score=score, game_id=game.id)
 
 def authenticate(e, p):
@@ -168,14 +172,34 @@ def authenticate(e, p):
 @app.route("/finish", methods=['POST'])
 def finish():
     gameID = request.form.get("gameID")
-    firstWon = request.form.get("gameID")
+    score = request.form.get("score")
     game = Game.query.get(gameID)
-    if firstWon:
+    if game.u1 is None:
+        game.u1 = session['user_id']
+        user = User.query.get(session['user_id'])
+        game.u1Score = score
+        # put on queue
+        r.rpush(user.school, game.id)
+        db.session.add(game)
+        db.session.commit()
+        return jsonify(success=True)
+    elif game.u2 is None:
+        game.u2 = session['user_id']
+        game.u2Score = score
+        db.session.add(game)
+        db.session.commit()
+        return jsonify(success=True)
+
+    if game.u1Score >= score:
         winner = User.query.get(game.u1)
         loser = User.query.get(game.u2)
+        # we don't care about keeping the actual game data around anymore
+        db.session.delete(game)
     else:
         winner = User.query.get(game.u2)
         loser = User.query.get(game.u1)
+        # we don't care about keeping the actual game data around anymore
+        db.session.delete(game)
     winner.score += 1
     winner.gamesPlayed += 1
     loser.gamesPlayed += 1
@@ -183,15 +207,15 @@ def finish():
     db.session.add(loser)
     db.session.commit()
     if (school == "po"):
-        r.incr(poscore)
+        r.incr('poscore')
     elif(school == "pz"):
-        r.inc(pzscore)
+        r.inc('pzscore')
     elif(school == "hm"):
-        r.inc(hmscore)
+        r.inc('hmscore')
     elif(school == "sc"):
-        r.inc(scscore)
+        r.inc('scscore')
     elif(school == "cm"):
-        r.inc(cmscore)
+        r.inc('cmscore')
     return jsonify(success=True)
 
 def sendConfirmation(id,email):
@@ -233,19 +257,18 @@ def emailAuth(e):
     return school
 
 def nextGame(mySchool):
-    games = [r.lindex(po, 0), r.lindex(pz, 0), r.lindex(cm, 0), r.lindex(hm, 0), r.lindex(sc, 0)]
-    if (mySchool == "po"):
-        del games[0]
-    elif (mySchool == "pz"):
-        del games[1]
-    elif (mySchool == "cm"):
-        del games[2]
-    elif (mySchool == "hm"):
-        del games[3]
-    elif (mySchool == "sc"):
-        del games[4]
-    game = map (int, game)
-    return min(game)
+    other_schools = [x for x in ('po','pz','cm','hm','sc') if x != mySchool]
+    games = []
+    for school in other_schools:
+        games.append((r.lindex(school, 0), school))
+     
+    games = filter(lambda (x,y) : x != None, games)
+    if len(games) == 0:
+        return None
+    else:
+        x, y = min(games)
+        r.lpop(y)
+        return int(x)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

@@ -5,13 +5,15 @@
 <script type='text/javascript'>
     $(document).ready(function () { 
         $('#game').hide();
-        var g = Game({{ game_id }}, {{ word }}, '#game', '#counter', '#wordList', '#score');
+        var g = Game({{ game_id }}, '{{ word }}', '#game', '#counter', '#wordList', '#score');
         $('#startButton').click(function() {
             $(this).hide();
             g.start();  
         });
         $('#wordForm').submit(function() {
             g.guess($('#wordInput').val());
+            $('#wordInput').val('');
+            return false;
         });
 
     });
@@ -25,7 +27,7 @@
     <div id='score'></div>
     <ul id='base'>
     {% for char in word %}
-        <li id='base{{ loop.index0 }}'></div>
+        <li id='base{{ loop.index0 }}'></li>
     {% endfor %}
     </ul>
 
