@@ -2,6 +2,7 @@ from flaskext.mail import Mail
 from flask import Flask, request, session, render_template, redirect, url_for, flash
 from models import User, Game
 from redis import Redis
+import random
 
 app = Flask(__name__)
 app.config.from_object('settings')
@@ -9,6 +10,14 @@ app.config.from_object('settings')
 db = SQLAlchemy(app)
 mail = Mail(app)
 r = Redis()
+six = set()
+words = set()
+
+for line in open("six.txt"):
+    six.add(line[:-1])
+
+for line in open("words.txt"):
+    words.add(line[:-1])
 
 @app.route('/')
 def index():
@@ -58,7 +67,7 @@ def newGame():
     next = nextGame(currentUser.school)
     if next == None:
         score = None
-        
+        word = random.sample(six)[0]
     else:
         game = Game.query.get(next)
         word = game.letters
