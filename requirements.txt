@@ -1,6 +1,8 @@
 Flask==0.8
 Flask-Mail==0.6.1
+Flask-SQLAlchemy==0.15
 Jinja2==2.6
+SQLAlchemy==0.7.6
 Werkzeug==0.8.3
 blinker==1.2
 chardet==1.0.1
