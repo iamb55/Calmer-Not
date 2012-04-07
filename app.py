@@ -44,6 +44,15 @@ def stats():
     if session.get("user_id") != None:     
         return render_template('stats.html')
     
+@app.route('/logout')
+def logout():
+    try:
+        session.pop('user_id')
+    except KeyError:
+        pass
+    finally:
+        return redirect(url_for('index'))
+
 @app.route('/login', methods=["POST"])
 def login():
     email = request.form.get('email')
