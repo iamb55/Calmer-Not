@@ -118,7 +118,7 @@ def validate():
     # are letters in word in base?
     in_base = reduce(lambda acc, c : (c in base) and acc, word, True)
     # is word a valid english word?
-    if (word in words or words in six) and in_base:
+    if (word in words or word in six) and in_base:
         return jsonify(valid=True)
     else:
         return jsonify(valid=False)
