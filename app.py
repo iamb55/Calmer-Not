@@ -126,7 +126,7 @@ def newGame():
 def authenticate(e, p):
     user = User.query.filter_by(email=e).first()
     # TODO: check if verified
-    return None if user is None or not user.check_password_hash(p) else user
+    return None if user is None or not user.check_password(p) else user
 
 @app.route("/finish", methods=['POST'])
 def finish():
@@ -159,9 +159,7 @@ def finish():
 
 def sendConfirmation(id,email):
     confkey = generateUnique(32)
-
-    link = '<p><a href=/confirm?confkey=%s' % (confkey)
-    body = '<p>Please confirm your email address by clicking the link below:</p>' + link
+    body = '<p>Please confirm your email address by clicking <a href="/confirm?confkey=%s">here</a></p>'  % (confkey)
     subj = '5C Word Warp - Email Confirmation'
 
     r.set(confkey,id)
