@@ -1,4 +1,4 @@
-from flask.sqlalchemy import SQLAlchemy
+from flaskext.sqlalchemy import SQLAlchemy
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -9,11 +9,13 @@ class User(db.Model):
     score = db.Column(db.Integer)
     email = db.Column(db.String(64))
     gamesPlayed = db.Column(db.Integer)
+    verified = db.Column(db.Boolean)
 
     def __init__(self, school, email, password):
         self.school = school
         self.email = email
         self.set_password(password)
+        self.verified = False
 
     def __repr__(self):
         '<User %s>' % self.email
