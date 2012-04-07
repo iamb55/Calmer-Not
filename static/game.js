@@ -10,6 +10,7 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
     var words = [];
     var prevGuesses = {};
     var score = 0;
+    var interval;
     $('#base').hide();
     for (var i = 0; i < base.length; i++) {
         $('#base' + i).html(base[i]);
@@ -35,17 +36,14 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
             $counter.html(60);
             $('#base').show();
             $game.show();
-            setTimeout(this.updateCountdown, 1000);
+            interval = setInterval(this.updateCountdown, 1000);
         },
         updateCountdown: function() {
-            var that = this;
             counter -= 1;
             $counter.html(counter);
             if (counter <= 0) {
                 this.finish(); 
-            }
-            else {
-                setTimeout(function() { that.updateCountdown }, 1000);
+                clearInterval(interval);
             }
         },
         finish: function() {
