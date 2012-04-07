@@ -16,14 +16,18 @@
 <p>{{ error }}</p>
 {% endif %}
 
+<p>Login</p>
 <form id="login" action="{{url_for('login')}}" method="post">
 Email: <input type="text" name="email" id="wordInput"/><br />
-Password: <input type="text" name="password" id="wordInput"/><br />
+Password: <input type="password" name="password" id="wordInput"/><br />
+<input type="submit"/>
 </form>
 
+<p>Register</p>
 <form id="register" action="{{url_for('register')}}" method="post">
 Email: <input type="text" name="email" id="wordInput"/><br />
-Password: <input type="text" name="password" id="wordInput"/><br />
+Password: <input type="password" name="password" id="wordInput"/><br />
+<input type="submit"/>
 </form>
 
 {% endblock %}
