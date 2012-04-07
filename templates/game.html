@@ -5,7 +5,10 @@
 <script type='text/javascript'>
     $(document).ready(function () { 
         $('#game').hide();
-        $('#over').hide();
+        $('#over').modal({
+            keyboard:false,
+            show:false
+        });
         var g = Game({{ game_id }}, '{{ word }}', '#game', '#counter', '#wordList', '#score');
         $('#startButton').click(function() {
             $(this).hide();
