@@ -50,6 +50,19 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
         finish: function() {
             $.post('/finish', {'score': score, 'gameID': gameNo}, function(data) {
                 if (data.success) {
+                    if (data.first) {
+                        $('#modehead').html('Nice work!');
+                        $('#modebody').html('We\'re waiting for an opponent to finsh this game.');
+                    } else if (win) {
+                        $('#modehead').html('Congratulations!');
+                        $('#modebody').html('You won! Way to go.');
+                    } else {
+                        $('#modehead').html('Nice try!');
+                        $('#modebody').html('You lost this time. Try again!');
+                    }
+                    $('#over').modal({
+                        keyboard: false
+                    })
                     console.log('callback from /endgame');
                     console.log(score);
                 } 

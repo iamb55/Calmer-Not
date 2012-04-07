@@ -45,7 +45,27 @@ def index():
 @app.route('/stats')
 def stats():
     if session.get("user_id") != None:     
-        return render_template('stats.html')
+        user = User.query.get(session['user_id'])
+        total = 0
+        poscore = int(r.get('poscore'))
+        total += poscore
+        pzscore = int(r.get('pzscore'))
+        total += pzscore
+        hmscore = int(r.get('hmscore'))
+        total += hmscore
+        scscore = int(r.get('scscore'))
+        total += scscore
+        cmscore = int(r.get('cmscore'))
+        total += cmscore
+        total = float(1 if total == 0 else total)
+        poscore = float(poscore) / total
+        pzscore = float(pzscore) / total
+        hmscore = float(hmscore) / total
+        scscore = float(scscore) / total
+        cmscore = float(cmscore) / total
+        gamesPlayed = 1 if user.gamesPlayed == 0 else user.gamesPlayed
+        return render_template('stats.html', wins=user.score, percent=user.score/gamesPlayed, games=user.gamesPlayed,
+                                po=poscore, pz=pzscore, hm=hmscore, sc=scscore, cm=cmscore)
     
 @app.route('/logout')
 def logout():
@@ -160,20 +180,21 @@ def finish():
         r.rpush(user.school, game.id)
         db.session.add(game)
         db.session.commit()
-        return jsonify(success=True)
+        return jsonify(success=True,first=True)
     elif game.u2 is None:
         game.u2 = session['user_id']
         game.u2Score = score
         db.session.add(game)
         db.session.commit()
-        return jsonify(success=True)
 
     if game.u1Score >= score:
+        won=False
         winner = User.query.get(game.u1)
         loser = User.query.get(game.u2)
         # we don't care about keeping the actual game data around anymore
         db.session.delete(game)
     else:
+        won=True
         winner = User.query.get(game.u2)
         loser = User.query.get(game.u1)
         # we don't care about keeping the actual game data around anymore
@@ -184,17 +205,18 @@ def finish():
     db.session.add(winner)
     db.session.add(loser)
     db.session.commit()
+    school = winner.school
     if (school == "po"):
-        r.incr(poscore)
+        r.incr('poscore')
     elif(school == "pz"):
-        r.inc(pzscore)
+        r.inc('pzscore')
     elif(school == "hm"):
-        r.inc(hmscore)
+        r.inc('hmscore')
     elif(school == "sc"):
-        r.inc(scscore)
+        r.inc('scscore')
     elif(school == "cm"):
-        r.inc(cmscore)
-    return jsonify(success=True)
+        r.inc('cmscore')
+    return jsonify(success=True,win=won,first=False)
 
 def sendConfirmation(id,email):
     confkey = generateUnique(32)

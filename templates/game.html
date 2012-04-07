@@ -39,4 +39,16 @@
 
 </div>
 </div>
+<div class="modal" id="over">
+  <div class="modal-header">
+    <h3 id = "modehead"></h3>
+  </div>
+  <div class="modal-body">
+    <p id="modebody"></p>
+  </div>
+  <div class="modal-footer">
+    <a href="{{ url_for('stats') }}" class="btn">Stats</a>
+    <a href="{{ url_for('newGame') }}" class="btn">New Game</a>
+  </div>
+</div>
 {% endblock %}
