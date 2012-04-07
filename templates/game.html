@@ -12,6 +12,7 @@
         });
         $('#wordForm').submit(function() {
             g.guess($('#wordInput').val());
+            return false;
         });
 
     });
