@@ -189,7 +189,7 @@ def emailAuth(e):
         school = 'po'
     elif e.endswith('hmc.edu'):
         school = 'hm'
-    elif e.endwith('pitzer.edu'):
+    elif e.endswith('pitzer.edu'):
         school = 'pz'
     elif e.endswith('scrippscollege.edu'):
         school = 'sc'
