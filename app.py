@@ -35,6 +35,7 @@ r.set('cmscore', 0)
 
 @app.route('/')
 def index():
+    error = None
     if session.get("user_id") != None:     
         return redirect(url_for('stats'))
     if session.get('error'): 
