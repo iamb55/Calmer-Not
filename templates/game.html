@@ -25,17 +25,17 @@
 <div id='game'>
     <div id='counter'></div>
     <div id='score'></div>
-    <ul id='base'>
+    <div class="row" id='base'>
     {% for char in word %}
-        <li id='base{{ loop.index0 }}'></li>
+        <div class="span1 offset1"> id='base{{ loop.index0 }}'></div>
     {% endfor %}
-    </ul>
+    </div>
 
     <form id="wordForm" autocomplete="off">
     Word: <input type="text" name="word" id="wordInput"/><br />
     </form>
 
-    <ul id='wordList'></ul>
+    <div id='wordList'></div>
 
 </div>
 </div>
