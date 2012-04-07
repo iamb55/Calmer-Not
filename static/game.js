@@ -60,9 +60,7 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
                         $('#modehead').html('Nice try!');
                         $('#modebody').html('You lost this time. Try again!');
                     }
-                    $('#over').modal({
-                        keyboard: false
-                    })
+                    $('#over').modal('show');
                     console.log('callback from /endgame');
                     console.log(score);
                 } 
