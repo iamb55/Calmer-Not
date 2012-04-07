@@ -185,15 +185,15 @@ def finish():
     db.session.add(loser)
     db.session.commit()
     if (school == "po"):
-        r.incr(poscore)
+        r.incr('poscore')
     elif(school == "pz"):
-        r.inc(pzscore)
+        r.inc('pzscore')
     elif(school == "hm"):
-        r.inc(hmscore)
+        r.inc('hmscore')
     elif(school == "sc"):
-        r.inc(scscore)
+        r.inc('scscore')
     elif(school == "cm"):
-        r.inc(cmscore)
+        r.inc('cmscore')
     return jsonify(success=True)
 
 def sendConfirmation(id,email):
