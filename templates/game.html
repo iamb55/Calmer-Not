@@ -32,12 +32,13 @@
   </div>
   <div class="row">
     <div class="span1 offset1" id='score'></div>
-  </div
+  </div>
     <div class="row" id='base'>
     {% for char in word %}
-        <div class="span1 offset1" id='base{{ loop.index0 }}'></div>
+        <div class="span1 offset1 letter" id='base{{ loop.index0 }}'></div>
     {% endfor %}
     </div>
+
     <div class="row">
     <form id="wordForm" autocomplete="off">
     Word: <input type="text" name="word" id="wordInput"/><br />
