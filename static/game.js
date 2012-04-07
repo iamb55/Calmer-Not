@@ -26,7 +26,7 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
                 $('#word' + index).addClass('invalid');
             }
         }
-    }
+    };
 
     return {
         start: function() {
@@ -63,8 +63,6 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
             $list.prepend('<li id=word' + i + '>' + theGuess + '</li>');
             validate(theGuess, i);
         }
-
-
-    } 
+    }; 
 }
 

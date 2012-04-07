@@ -131,7 +131,8 @@ def newGame():
     next = nextGame(currentUser.school)
     if next == None:
         score = None
-        word = random.sample(six, 1)[0]
+        w = random.sample(six, 1)[0]
+        word = ''.join(random.sample(w,len(w)))
         game = Game(word)
         db.session.add(game)
         db.session.commit()

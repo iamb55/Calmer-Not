@@ -5,7 +5,7 @@
 <script type='text/javascript'>
     $(document).ready(function () { 
         $('#game').hide();
-        var g = Game({{ game_id }}, {{ word }}, '#game', '#counter', '#wordList', '#score');
+        var g = Game({{ game_id }}, '{{ word }}', '#game', '#counter', '#wordList', '#score');
         $('#startButton').click(function() {
             $(this).hide();
             g.start();  
