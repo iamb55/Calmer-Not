@@ -1,6 +1,12 @@
 from flaskext.sqlalchemy import SQLAlchemy
-from app import db
+from flask import Flask
 from werkzeug.security import generate_password_hash, check_password_hash
+
+app = Flask(__name__)
+app.config.from_object('settings')
+
+db = SQLAlchemy(app)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,7 +34,7 @@ class User(db.Model):
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    letters = db.Column(db.String(7))
+    letters = db.Column(db.String(6))
     u1 = db.Column(db.Integer, db.ForeignKey('user.id'))
     u2 = db.Column(db.Integer, db.ForeignKey('user.id'))
     u1Score = db.Column(db.Integer)
