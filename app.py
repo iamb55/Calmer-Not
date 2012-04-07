@@ -1,5 +1,5 @@
 from flaskext.mail import Mail, Message
-from flask import Flask, request, session, render_template, redirect, url_for, flash, jsonify
+from flask import request, session, render_template, redirect, url_for, flash, jsonify
 from models import User, Game, app, db
 from redis import Redis
 import random
