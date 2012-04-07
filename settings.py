@@ -1,7 +1,4 @@
-import os
-
 DEBUG = True
-DB_CON = os.environ.get('DATABASE_URL')
 
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 465

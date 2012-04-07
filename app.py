@@ -9,9 +9,12 @@ import urlparse
 
 mail = Mail(app)
 if os.environ.has_key('REDISTOGO_URL'):
-    urlparse.uses_netloc.append('redis')
     url = urlparse.urlparse(os.environ['REDISTOGO_URL'])
-    r = Redis(host=url.hostname, port=url.port, db=0, password=url.password)
+    app.config.setdefault('REDIS_HOST', url.hostname)
+    app.config.setdefault('REDIS_PORT', url.port)
+    app.config.setdefault('REDIS_PASSWORD', url.password)    
+
+r = Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'], db=0, password=app.config['REDIS_PASSWORD'])
 
 six = set()
 words = set()
