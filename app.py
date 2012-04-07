@@ -181,7 +181,7 @@ def finish():
         r.rpush(user.school, game.id)
         db.session.add(game)
         db.session.commit()
-        return jsonify(success=True,first=True)
+        return jsonify(success=True,first=True,win=False)
     elif game.u2 is None:
         game.u2 = session['user_id']
         game.u2Score = score
