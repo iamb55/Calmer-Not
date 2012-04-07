@@ -25,7 +25,7 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
             else {
                 $('#word' + index).addClass('invalid');
             }
-        }
+        });
     };
 
     return {
