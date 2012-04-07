@@ -5,9 +5,14 @@ from redis import Redis
 import random
 import os
 import hashlib
+import urlparse
 
 mail = Mail(app)
-r = Redis()
+if os.environ.has_key('REDISTOGO_URL'):
+    urlparse.uses_netloc.append('redis')
+    url = urlparse.urlparse(os.environ['REDISTOGO_URL'])
+    r = Redis(host=url.hostname, port=url.port, db=0, password=url.password)
+
 six = set()
 words = set()
 
@@ -205,4 +210,5 @@ def nextGame(mySchool):
     return min(game)
 
 if __name__ == '__main__':
-    app.run();
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port);
