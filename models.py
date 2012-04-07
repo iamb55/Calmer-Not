@@ -26,7 +26,7 @@ class User(db.Model):
         self.verified = False
 
     def __repr__(self):
-        '<User %s>' % self.email
+        return '<User %s>' % self.email
 
     def set_password(self, password):
         self.pw_hash = generate_password_hash(password)
@@ -46,4 +46,4 @@ class Game(db.Model):
         self.letters = letters
 
     def __repr__(self):
-         '<Game %s>' % self.letters
+        return '<Game %s>' % self.letters
