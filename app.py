@@ -132,6 +132,9 @@ def newGame():
     if next == None:
         score = None
         word = random.sample(six, 1)[0]
+        game = Game(word)
+        db.session.add(game)
+        db.session.commit()
     else:
         game = Game.query.get(next)
         word = game.letters
