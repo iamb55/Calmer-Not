@@ -57,8 +57,7 @@ def stats():
         total += scscore
         cmscore = int(r.get('cmscore'))
         total += cmscore
-        total = float(total)
-        total = 1 if total == 0 else total
+        total = float(1 if total == 0 else total)
         poscore = float(poscore) / total
         pzscore = float(pzscore) / total
         hmscore = float(hmscore) / total
