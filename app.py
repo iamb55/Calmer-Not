@@ -45,7 +45,29 @@ def index():
 @app.route('/stats')
 def stats():
     if session.get("user_id") != None:     
-        return render_template('stats.html')
+        user = User.query.get(session['user_id']
+
+        total = 0
+        poscore = r.get('poscore')
+        total += poscore
+        pzscore = r.get('pzscore')
+        total += pzscore
+        hmscore = r.get('hmscore')
+        total += hmscore
+        scscore = r.get('scscore')
+        total += scscore
+        cmscore = r.get('cmscore')
+        total += cmscore
+        total = float(total)
+
+        poscore = float(poscore) / total
+        pzscore = float(pzscore) / total
+        hmscore = float(hmscore) / total
+        scscore = float(scscore) / total
+        cmscore = float(cmscore) / total
+
+        return render_template('stats.html', wins=user.score, percent=user.score/user.gamesPlayed, games=user.gamesPlayed,
+                                po=poscore, pz=pzscore, hm=hmscore, sc=scscore, cm=cmscore)
     
 @app.route('/logout')
 def logout():
