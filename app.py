@@ -17,6 +17,12 @@ for line in open("six.txt"):
 for line in open("words.txt"):
     words.add(line[:-1])
 
+r.set(poscore, 0)
+r.set(pzscore, 0)
+r.set(hmscore, 0)
+r.set(scscore, 0)
+r.set(cmscore, 0)
+
 @app.route('/')
 def index():
     if session.get("user_id") != None:     
@@ -104,6 +110,39 @@ def authenticate(e, p):
     user = User.query.filter_by(email=e).first()
     # TODO: check if verified
     return None if user is None or not user.check_password_hash(p) else user
+
+def win(school):
+    currentUser = User.query.get(session.get("user_id"))
+    user.score += 1
+    user.gamesPlayed += 1
+    db.session.add(user)
+    db.session.commit()
+    if (school == "po"):
+        r.incr(poscore)
+    elif(school == "pz"):
+        r.inc(pzscore)
+    elif(school == "hm"):
+        r.inc(hmscore)
+    elif(school == "sc"):
+        r.inc(scscore)
+    elif(school == "cm"):
+        r.inc(cmscore)
+
+def lose(school):    
+    currentUser = User.query.get(session.get("user_id"))
+    user.gamesPlayed += 1
+    db.session.add(user)
+    db.session.commit()
+    if (school == "po"):
+        r.incr(poscore)
+    elif(school == "pz"):
+        r.inc(pzscore)
+    elif(school == "hm"):
+        r.inc(hmscore)
+    elif(school == "sc"):
+        r.inc(scscore)
+    elif(school == "cm"):
+        r.inc(cmscore)
 
 def sendConfirmation(id,email):
     confkey = generateUnique(32)
