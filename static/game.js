@@ -33,16 +33,17 @@ var Game = function(gameNo, word, id, counterId, listId, scoreId) {
         start: function() {
             console.log("Starting the game...");
             $score.html(0);
-            $counter.html(60);
+            $counter.html(10);
             $('#base').show();
             $game.show();
-            interval = setInterval(this.updateCountdown, 1000);
+            var that = this;
+            interval = setInterval(function() { that.updateCountdown(that); }, 1000);
         },
-        updateCountdown: function() {
+        updateCountdown: function(that) {
             counter -= 1;
             $counter.html(counter);
             if (counter <= 0) {
-                this.finish(); 
+                that.finish(); 
                 clearInterval(interval);
             }
         },
