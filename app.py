@@ -45,8 +45,7 @@ def index():
 @app.route('/stats')
 def stats():
     if session.get("user_id") != None:     
-        user = User.query.get(session['user_id']
-
+        user = User.query.get(session['user_id'])
         total = 0
         poscore = r.get('poscore')
         total += poscore
