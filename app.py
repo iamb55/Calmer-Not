@@ -47,15 +47,15 @@ def stats():
     if session.get("user_id") != None:     
         user = User.query.get(session['user_id'])
         total = 0
-        poscore = r.get('poscore')
+        poscore = int(r.get('poscore'))
         total += poscore
-        pzscore = r.get('pzscore')
+        pzscore = int(r.get('pzscore'))
         total += pzscore
-        hmscore = r.get('hmscore')
+        hmscore = int(r.get('hmscore'))
         total += hmscore
-        scscore = r.get('scscore')
+        scscore = int(r.get('scscore'))
         total += scscore
-        cmscore = r.get('cmscore')
+        cmscore = int(r.get('cmscore'))
         total += cmscore
         total = float(total)
 
