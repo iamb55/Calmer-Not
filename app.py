@@ -90,7 +90,7 @@ def login():
     # invalid u or p
     else:
         session['error'] = 'Your email or password was wrong'
-        return render_template(url_for('index'))
+        return render_template('index.html')
 
 @app.route('/register', methods=['POST'])
 def register():
