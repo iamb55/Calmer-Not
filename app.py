@@ -120,7 +120,7 @@ def authenticate(e, p):
     # TODO: check if verified
     return None if user is None or not user.check_password_hash(p) else user
 
-@app.route("/finish"), methods=['POST']
+@app.route("/finish", methods=['POST'])
 def finish():
     gameID = request.form.get("gameID")
     firstWon = request.form.get("gameID")
