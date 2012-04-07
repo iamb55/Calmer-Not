@@ -210,13 +210,13 @@ def finish():
     if (school == "po"):
         r.incr('poscore')
     elif(school == "pz"):
-        r.inc('pzscore')
+        r.incr('pzscore')
     elif(school == "hm"):
-        r.inc('hmscore')
+        r.incr('hmscore')
     elif(school == "sc"):
-        r.inc('scscore')
+        r.incr('scscore')
     elif(school == "cm"):
-        r.inc('cmscore')
+        r.incr('cmscore')
     return jsonify(success=True,win=won,first=False)
 
 def sendConfirmation(id,email):
