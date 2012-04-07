@@ -24,8 +24,12 @@
 <div id='container'>
 <button type='button' id='startButton'>Start Game</button>
 <div id='game'>
-    <div id='counter'></div>
-    <div id='score'></div>
+  <div class="row">
+    <div class="span1 offset1" id='counter'></div>
+  </div>
+  <div class="row">
+    <div class="span1 offset1" id='score'></div>
+  </div
     <div class="row" id='base'>
     {% for char in word %}
         <div class="span1 offset1" id='base{{ loop.index0 }}'></div>
