@@ -39,14 +39,14 @@ def stats():
 @app.route('/login', methods=["POST"])
 def login():
     error = None
-    email = request.form.get('username')
+    email = request.form.get('email')
     password = request.form.get('password')
     user = authenticate(email, password)
     # user exists and authed
     if user != None:
         session['user_id']  = user.id
-        flash('You were successfully logged in')
-        return redirect(url_for('index'))
+        flash('You were successfully logged in.')
+        return redirect(url_for('stats'))
     # invalid u or p
     else:
         error = 'Your email or password was wrong'
@@ -98,7 +98,7 @@ def confirm():
     user.verified = True
     session['user_id'] = user.id
     flash('Your email address is confirmed! Thanks!')
-    return redirect(url_for('index'),error=error)
+    return redirect(url_for('stats'),error=error)
 
 @app.route('/newgame', methods=['POST'])        
 def newGame():
@@ -203,3 +203,6 @@ def nextGame(mySchool):
         del games[4]
     game = map (int, game)
     return min(game)
+
+if __name__ == '__main__':
+    app.run();

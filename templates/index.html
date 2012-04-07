@@ -1,29 +1,34 @@
+{% extends "base.html" %}
 {% block content %}
 <h1>5C Word Attack</h1>
 
-<div class="score-to-beat"></div>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class='flashes'>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
-<div class="timer"></div>
+{% if error %}
+<p>{{ error }}</p>
+{% endif %}
 
-<ul class="word-row">
-<li class="letter">1</li>
-<li class="letter">2</li>
-<li class="letter">3</li>
-<li class="letter">4</li>
-<li class="letter">5</li>
-<li class="letter">6</li>
-</ul>
-
-<form id="wordForm" autocomplete="off">
-Word: <input type="text" name="word" id="wordInput"/><br />
+<form id="login" action="{{url_for('login')}}" method="post">
+Email: <input type="text" name="email" id="wordInput"/><br />
+Password: <input type="text" name="password" id="wordInput"/><br />
 </form>
 
-<ul class="word list">
-</ul>
+<form id="register" action="{{url_for('register')}}" method="post">
+Email: <input type="text" name="email" id="wordInput"/><br />
+Password: <input type="text" name="password" id="wordInput"/><br />
+</form>
 
-<script type="text/javascript">
-  $(document).ready( function()  {
-    $('#wordInput').focus();
-  });
-</script>
 {% endblock %}
+<!--<script type="text/javascript">-->
+  <!--$(document).ready( function()  {-->
+    <!--$('#wordInput').focus();-->
+  <!--});-->
+<!--</script>-->
