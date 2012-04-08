@@ -27,12 +27,6 @@ for line in open("six.txt"):
 for line in open("words.txt"):
     words.add(line[:-1])
 
-r.set('poscore', 0)
-r.set('pzscore', 0)
-r.set('hmscore', 0)
-r.set('scscore', 0)
-r.set('cmscore', 0)
-
 @app.route('/')
 def index():
     error = None
