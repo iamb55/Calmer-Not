@@ -2,6 +2,7 @@ from flaskext.mail import Mail, Message
 from flask import request, session, render_template, redirect, url_for, flash, jsonify
 from models import User, Game, app, db
 from redis import Redis
+from collections import defaultdict
 import random
 import os
 import hashlib
@@ -108,11 +109,17 @@ def register():
 @app.route('/validate')
 def validate():
     word = request.args.get('guess') 
-    base = request.args.get('base') 
+    base = request.args.get('base')
+    d = defaultdict(int)
+    for c in base:
+        d[c] += 1
     # are letters in word in base?
-    in_base = reduce(lambda acc, c : (c in base) and acc, word, True)
+    for c in word:
+        if d[c] <= 0:
+            return jsonify(valid=False)
+        d[c] -= 1
     # is word a valid english word?
-    if (word in words or word in six) and in_base:
+    if word in words or word in six:
         return jsonify(valid=True)
     else:
         return jsonify(valid=False)
