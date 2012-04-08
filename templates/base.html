@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}5C Word Attack{% endblock %}</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"> </script>
+<title>{% block title %}5C Word Attack{% endblock %}</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
 {% block script %}{% endblock %}
 <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
@@ -11,29 +11,25 @@
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
-    </style>
+</style>
 </head>
 
 <body>
  <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">5C Word War</a>
+        <a class="brand" href="{{ url_for('index') }}">5C Word War</a>
           <div class="nav-collapse">
             <ul class="nav">
-                <li class="active"><a href="{{ url_for('stats') }}"></a></li>
+                <li>
+                    <a href="{{ url_for('stats') }}"></a>
+                </li>
             </ul>
             <p class="navbar-text pull-right"><a href="{{ url_for('logout') }}">Logout</a></p>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
-
 {% block content %}
 {% endblock %}
 </body>
