@@ -3,10 +3,12 @@ from flask import request, session, render_template, redirect, url_for, flash, j
 from models import User, Game, app, db
 from redis import Redis
 from collections import defaultdict
+from functools import wraps
 import random
 import os
 import hashlib
 import urlparse
+
 
 mail = Mail(app)
 if os.environ.has_key('REDISTOGO_URL'):
@@ -28,34 +30,40 @@ for line in open("six.txt"):
 for line in open("words.txt"):
     words.add(line[:-1])
 
+def login_required(f):
+    @wraps(f)
+    def dec_fn(*args, **kwargs):
+        if not session.get('user_id'):
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return dec_fn
+
 @app.route('/')
 def index():
     error = None
-    if session.get("user_id") != None:     
+    if session.get("user_id"):     
         return redirect(url_for('stats'))
     if session.get('error'): 
         error = session.pop('error')
     return render_template('index.html', error=error)
 
 @app.route('/stats')
+@login_required
 def stats():
-    if session.get("user_id") != None:     
-        user = User.query.get(session['user_id'])
-        scores = map(float, [r.get(s) for s in ('poscore', 'pzscore', 'hmscore', 'scscore', 'cmscore')])
-        total = sum(scores)
-        total = 1.0 if total == 0 else total
-        percents = map(lambda x: x / total, scores)
-        gamesPlayed = float(1 if user.gamesPlayed == 0 else user.gamesPlayed)
-        return render_template('stats.html', wins=user.score, 
-                                             percent=(user.score/gamesPlayed), 
-                                             games=user.gamesPlayed,
-                                             po=percents[0], 
-                                             pz=percents[1], 
-                                             hm=percents[2], 
-                                             sc=percents[3], 
-                                             cm=percents[4])
-    else:
-        return redirect(url_for('index'))
+    user = User.query.get(session['user_id'])
+    scores = map(float, [r.get(s) for s in ('poscore', 'pzscore', 'hmscore', 'scscore', 'cmscore')])
+    total = sum(scores)
+    total = 1.0 if total == 0 else total
+    percents = map(lambda x: x / total, scores)
+    gamesPlayed = float(1 if user.gamesPlayed == 0 else user.gamesPlayed)
+    return render_template('stats.html', wins=user.score, 
+                                         percent=(user.score/gamesPlayed), 
+                                         games=user.gamesPlayed,
+                                         po=percents[0], 
+                                         pz=percents[1], 
+                                         hm=percents[2], 
+                                         sc=percents[3], 
+                                         cm=percents[4])
     
 @app.route('/logout')
 def logout():
@@ -72,14 +80,14 @@ def login():
     password = request.form.get('password')
     user = authenticate(email, password)
     # user exists and authed
-    if user != None:
+    if user:
         session['user_id']  = user.id
         flash('You were successfully logged in.')
         return redirect(url_for('stats'))
     # invalid u or p
     else:
-        session['error'] = 'Your email or password was wrong'
-        return render_template('index.html')
+        session['error'] = 'Your email or password was wrong.'
+        return redirect(url_for('index'))
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -88,14 +96,14 @@ def register():
 
     school = emailAuth(email)
     if not school:
-        session['error'] = 'Invalid email address'
+        session['error'] = 'Invalid email address.'
         return redirect(url_for('index'))
 
     user = User(school,email,password)
     db.session.add(user)
     db.session.commit()
 
-    sendConfirmation(user.id,email)
+    sendConfirmation(user.id, email)
 
     session['user_id'] = user.id
     return redirect(url_for('index'))
@@ -125,13 +133,13 @@ def confirm():
     if key == None:
         session['error'] = 'Invalid confirmation key' 
         return redirect(url_for('index'))
-    id = r.get(key)
+    user_id = r.get(key)
     if id == None:
         session['error'] = 'No such user'
         return redirect(url_for('index'))
 
     r.delete(key)
-    user = User.query.get(id)
+    user = User.query.get(user_id)
     user.verified = True
     db.session.add(user)
     db.session.commit()
@@ -140,12 +148,11 @@ def confirm():
     return redirect(url_for('stats'))
 
 @app.route('/newgame', methods=['GET'])        
+@login_required
 def newGame():
-    if session.get("user_id") == None:     
-        return redirect(url_for("index"))
     currentUser = User.query.get(session.get("user_id"))
     next = nextGame(currentUser.school)
-    if next == None:
+    if not next:
         score = None
         w = random.sample(six, 1)[0]
         word = ''.join(random.sample(w,len(w)))
@@ -166,8 +173,9 @@ def authenticate(e, p):
 @app.route("/finish", methods=['POST'])
 def finish():
     gameID = request.form.get("gameID")
-    score = request.form.get("score")
+    score = int(request.form.get("score"))
     game = Game.query.get(gameID)
+    # current player was first to play
     if game.u1 is None:
         game.u1 = session['user_id']
         user = User.query.get(session['user_id'])
@@ -176,51 +184,41 @@ def finish():
         r.rpush(user.school, game.id)
         db.session.add(game)
         db.session.commit()
-        return jsonify(success=True,first=True,win=False)
+        return jsonify(success=True, win=False, first=True)
+    # current player was second to play
+    # TODO: This is unnecessary. In fact, we don't even need to store any info about u2
+    # in the db. Not fixing yet, since we should update DB schema.
     elif game.u2 is None:
         game.u2 = session['user_id']
         game.u2Score = score
         db.session.add(game)
         db.session.commit()
-
+    # TODO: Handle ties correctly
     if game.u1Score >= score:
-        won=False
+        won = False
         winner = User.query.get(game.u1)
         loser = User.query.get(game.u2)
-        # we don't care about keeping the actual game data around anymore
-        db.session.delete(game)
     else:
-        won=True
+        won = True
         winner = User.query.get(game.u2)
         loser = User.query.get(game.u1)
-        # we don't care about keeping the actual game data around anymore
-        db.session.delete(game)
+    # we don't care about keeping the actual game data around anymore, now that it's over
+    db.session.delete(game)
     winner.score += 1
     winner.gamesPlayed += 1
     loser.gamesPlayed += 1
     db.session.add(winner)
     db.session.add(loser)
     db.session.commit()
-    school = winner.school
-    if (school == "po"):
-        r.incr('poscore')
-    elif(school == "pz"):
-        r.incr('pzscore')
-    elif(school == "hm"):
-        r.incr('hmscore')
-    elif(school == "sc"):
-        r.incr('scscore')
-    elif(school == "cm"):
-        r.incr('cmscore')
-    return jsonify(success=True,win=won,first=False)
+    # this allows for arbitrary strings, but since we set school ourselves it should be fine
+    r.incr('%sscore' % winner.school)
+    return jsonify(success=True, win=won, first=False)
 
-def sendConfirmation(id,email):
+def sendConfirmation(user_id,email):
     confkey = generateUnique(32)
     body = '<p>Please confirm your email address by clicking <a href="%s/confirm?confkey=%s">here</a></p>'  % (base_url, confkey)
     subj = '5C Word Warp - Email Confirmation'
-
-    r.set(confkey,id)
-
+    r.set(confkey, user_id)
     msg = Message(html=body,subject=subj,recipients=[email])
     mail.send(msg)
 
