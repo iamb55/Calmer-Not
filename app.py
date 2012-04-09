@@ -41,27 +41,21 @@ def index():
 def stats():
     if session.get("user_id") != None:     
         user = User.query.get(session['user_id'])
-        total = 0
-        poscore = int(r.get('poscore'))
-        total += poscore
-        pzscore = int(r.get('pzscore'))
-        total += pzscore
-        hmscore = int(r.get('hmscore'))
-        total += hmscore
-        scscore = int(r.get('scscore'))
-        total += scscore
-        cmscore = int(r.get('cmscore'))
-        total += cmscore
-        total = float(1 if total == 0 else total)
-        poscore = float(poscore) / total
-        pzscore = float(pzscore) / total
-        hmscore = float(hmscore) / total
-        scscore = float(scscore) / total
-        cmscore = float(cmscore) / total
+        scores = map(float, [r.get(s) for s in ('poscore', 'pzscore', 'hmscore', 'scscore', 'cmscore')])
+        total = sum(scores)
+        total = 1.0 if total == 0 else total
+        percents = map(lambda x: x / total, scores)
         gamesPlayed = float(1 if user.gamesPlayed == 0 else user.gamesPlayed)
-        
-        return render_template('stats.html', wins=user.score, percent=float(user.score)/gamesPlayed, games=user.gamesPlayed,
-                                po=poscore, pz=pzscore, hm=hmscore, sc=scscore, cm=cmscore)
+        return render_template('stats.html', wins=user.score, 
+                                             percent=(user.score/gamesPlayed), 
+                                             games=user.gamesPlayed,
+                                             po=percents[0], 
+                                             pz=percents[1], 
+                                             hm=percents[2], 
+                                             sc=percents[3], 
+                                             cm=percents[4])
+    else:
+        return redirect(url_for('index'))
     
 @app.route('/logout')
 def logout():
