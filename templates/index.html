@@ -1,38 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
+<div class='row'>
+<div class='span8 offset2'>
 <h1>5C Word Attack</h1>
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
-    <ul class='flashes'>
-    {% for message in messages %}
-      <li>{{ message }}</li>
+    {% for category, message in messages %}
+    <div class='alert alert-{{ category }}'>
+        <a class="close" data-dismiss="alert">×</a>
+          {{ message }}
+    </div>
     {% endfor %}
     </ul>
   {% endif %}
 {% endwith %}
 
-{% if error %}
-<p>Error: {{ error }}</p>
-{% endif %}
-
-<p class="span2 offset1">Login</p>
-<form class="span2 offset1" id="login" action="{{url_for('login')}}" method="post">
-Email: <input type="text" name="email" id="wordInput"/><br />
-Password: <input type="password" name="password" id="wordInput"/><br />
-<input type="submit"/>
+<h4>Login</h4>
+<form class='well' id="login" action="{{url_for('login')}}" method="post">
+    <input type="text" name="email" class="input-medium" placeholder="Email">
+<input type="password" name="password" class="input-medium" placeholder="Password">
+<button type="submit" class="btn">Sign in</button>
 </form>
 
-<p class="span2 offset1">Register</p>
+<h4>Register</h4>
 <form class="span2 offset1" id="register" action="{{url_for('register')}}" method="post">
-Email: <input type="text" name="email" id="wordInput"/><br />
-Password: <input type="password" name="password" id="wordInput"/><br />
-<input type="submit"/>
+<p>Register with your 5C email address. We'll email you a link to validate your 
+        email and earn points for your school!</p>
+<input type="text" name="email" class="input-medium" placeholder="Email">
+<input type="password" name="password" class="input-medium" placeholder="Password">
+<button type="submit" class="btn">Register</button>
 </form>
+</div>
+</div>
 
 {% endblock %}
-<!--<script type="text/javascript">-->
-  <!--$(document).ready( function()  {-->
-    <!--$('#wordInput').focus();-->
-  <!--});-->
-<!--</script>-->

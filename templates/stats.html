@@ -8,27 +8,17 @@
 
 <div class="row">
     <div class='span8 offset2'>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-    <div class='alert alert-success'>
-        <a class="close" data-dismiss="alert">×</a>
-          {{ message }}
-    </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-    </div>
-</div>
-
-<div class="row">
-    <div class='span8 offset2'>
-{% if error %}
-<div class='alert alert-error'>
-<a class="close" data-dismiss="alert">×</a>
-{{ error }}
-</div>
-{% endif %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for category, message in messages %}
+        <div class='alert alert-{{ category }}'>
+            <a class="close" data-dismiss="alert">×</a>
+              {{ message }}
+        </div>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
     </div>
 </div>
 

@@ -24,33 +24,38 @@
 </script>
 {% endblock %}
 {% block content %}
-<div id='container'>
-<button type='button' id='startButton'>Start Game</button>
-<div id='game'>
-  <div class="row">
-    <div class="span1 offset1" id='counter'></div>
-  </div>
-  <div class="row">
-    <div class="span1 offset1" id='score'></div>
-  </div>
-    <div class="row" id='base'>
-    {% for char in word %}
-        <div class="span1 offset1 letter" id='base{{ loop.index0 }}'></div>
-    {% endfor %}
-    </div>
+<div class='row'>
+<div class='span8 offset2'>
+    <div id='container'>
+    <button type='button' id='startButton' class='btn'>Start Game</button>
+    <div id='game'>
+      <div class="row">
+        <div class="span1 offset1" id='counter'></div>
+      </div>
+      <div class="row">
+        <div class="span1 offset1" id='score'></div>
+      </div>
+        <div class="row" id='base'>
+        {% for char in word %}
+            <div class="span1 offset1 letter" id='base{{ loop.index0 }}'></div>
+        {% endfor %}
+        </div>
 
-    <div class="row">
-    <div class="span2 offset1">
-    <form id="wordForm" autocomplete="off">
-    Word: <input type="text" name="word" id="wordInput"/><br />
-    </form>
-    </div>
-    </div>
+        <div class="row">
+        <div class="span2 offset1">
+        <form id="wordForm" autocomplete="off">
+        Word: <input type="text" name="word" id="wordInput"/><br />
+        </form>
+        </div>
+        </div>
 
-    <div id='wordList'></div>
+        <div id='wordList'></div>
+    </div>
+    </div>
 
 </div>
 </div>
+
 <div class="modal fade" id="over">
   <div class="modal-header">
     <h3 id = "modehead"></h3>
