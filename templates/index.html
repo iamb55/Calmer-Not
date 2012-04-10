@@ -16,7 +16,7 @@
   {% endif %}
 {% endwith %}
 
-<form class='well form-horizontal' id="login" action="{{url_for('login')}}" method="post">
+<form class='form-horizontal' id="login" action="{{url_for('login')}}" method="post">
 <fieldset>
     <legend>Login</legend>
     <div class="controls">
@@ -28,11 +28,10 @@
     <div class="controls">
         <button type="submit" class="btn">Sign in</button>
     </div>
-    </div>
 </fieldset>
 </form>
 
-<form class="well form-horizontal" id="register" action="{{url_for('register')}}" method="post">
+<form class="form-horizontal" id="register" action="{{url_for('register')}}" method="post">
 <fieldset>
     <legend>Register</legend>
     <p>Register with your 5C email address. We'll email you a link to validate your email so you can earn points for your school!</p>
