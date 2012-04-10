@@ -16,20 +16,36 @@
   {% endif %}
 {% endwith %}
 
-<h4>Login</h4>
-<form class='well' id="login" action="{{url_for('login')}}" method="post">
-    <input type="text" name="email" class="input-medium" placeholder="5C Email">
-<input type="password" name="password" class="input-medium" placeholder="Password">
-<button type="submit" class="btn">Sign in</button>
+<form class='well form-horizontal' id="login" action="{{url_for('login')}}" method="post">
+<fieldset>
+    <legend>Login</legend>
+    <div class="controls">
+        <input type="text" name="email" class="input-medium" placeholder="5C Email">
+    </div>
+    <div class="controls">
+        <input type="password" name="password" class="input-medium" placeholder="Password">
+    </div>
+    <div class="controls">
+        <button type="submit" class="btn">Sign in</button>
+    </div>
+    </div>
+</fieldset>
 </form>
 
-<h4>Register</h4>
-<form class="well" id="register" action="{{url_for('register')}}" method="post">
-<p>Register with your 5C email address. We'll email you a link to validate your 
-        email so you can earn points for your school!</p>
-<input type="text" name="email" class="input-medium" placeholder="5C Email">
-<input type="password" name="password" class="input-medium" placeholder="Password">
-<button type="submit" class="btn">Register</button>
+<form class="well form-horizontal" id="register" action="{{url_for('register')}}" method="post">
+<fieldset>
+    <legend>Register</legend>
+    <p>Register with your 5C email address. We'll email you a link to validate your email so you can earn points for your school!</p>
+    <div class="controls">
+        <input type="text" name="email" class="input-medium" placeholder="5C Email">
+    </div>
+    <div class="controls">
+        <input type="password" name="password" class="input-medium" placeholder="Password">
+    </div>
+    <div class="controls">
+        <button type="submit" class="btn">Register</button>
+    </div>
+</fieldset>
 </form>
 </div>
 </div>
