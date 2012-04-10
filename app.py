@@ -79,7 +79,7 @@ def login():
     # user exists and authed
     if user:
         session['user_id']  = user.id
-        flash('You were successfully logged in.')
+        flash('You were successfully logged in.', 'success')
         return redirect(url_for('stats'))
     # invalid u or p
     else:
