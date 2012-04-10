@@ -40,12 +40,9 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    error = None
     if session.get("user_id"):     
         return redirect(url_for('stats'))
-    if session.get('error'): 
-        error = session.pop('error')
-    return render_template('index.html', error=error)
+    return render_template('index.html')
 
 @app.route('/stats')
 @login_required
@@ -86,17 +83,20 @@ def login():
         return redirect(url_for('stats'))
     # invalid u or p
     else:
-        session['error'] = 'Your email or password was wrong.'
+        flash(u'Your email or password was wrong.', 'error')
         return redirect(url_for('index'))
 
 @app.route('/register', methods=['POST'])
 def register():
     email = request.form.get('email')
     password = request.form.get('password')
+    if User.query.filter_by(email=email).first():
+        flash(u'That email address is already registered.', 'error')
+        return redirect(url_for('index'))
 
     school = emailAuth(email)
     if not school:
-        session['error'] = 'Invalid email address.'
+        flash(u'That isn\'t a valid 5C email address.', 'error')
         return redirect(url_for('index'))
 
     user = User(school,email,password)
@@ -106,6 +106,7 @@ def register():
     sendConfirmation(user.id, email)
 
     session['user_id'] = user.id
+    flash(u'Welcome! We\'ve sent you an email at %s. You\'ll need to click the link in the email before you can start playing.' % email, 'success')
     return redirect(url_for('index'))
 
 @app.route('/validate')
@@ -131,11 +132,11 @@ def confirm():
     key = request.args.get('confkey')
 
     if key == None:
-        session['error'] = 'Invalid confirmation key' 
+        flash(u'That confirmation key is invalid.', 'error')
         return redirect(url_for('index'))
     user_id = r.get(key)
     if id == None:
-        session['error'] = 'No such user'
+        flash(u'That user does not exist.', 'error')
         return redirect(url_for('index'))
 
     r.delete(key)
