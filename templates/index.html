@@ -2,7 +2,7 @@
 {% block content %}
 <div class='row'>
 <div class='span8 offset2'>
-<h1>5C Word Attack</h1>
+<h1>5C Word War</h1>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -19,9 +19,9 @@
 <form class='form-horizontal' id="login" action="{{url_for('login')}}" method="post">
 <fieldset>
     <legend>Login</legend>
-        <input type="text" name="email" class="input-large" placeholder="5C Email">
-        <input type="password" name="password" class="input-large" placeholder="Password">
-        <button type="submit" class="btn">Sign in</button>
+    <input type="text" name="email" class="input-large" placeholder="5C Email"><br />
+    <input type="password" name="password" class="input-large" placeholder="Password"><br />
+    <button type="submit" class="btn">Sign in</button>
 </fieldset>
 </form>
 
@@ -29,9 +29,9 @@
 <fieldset>
     <legend>Register</legend>
     <p>Register with your 5C email address. We'll email you a link to validate your email so you can earn points for your school!</p>
-        <input type="text" name="email" class="input-large" placeholder="5C Email">
-        <input type="password" name="password" class="input-large" placeholder="Password">
-        <button type="submit" class="btn">Register</button>
+    <input type="text" name="email" class="input-large" placeholder="5C Email"><br />
+    <input type="password" name="password" class="input-large" placeholder="Password"><br />
+    <button type="submit" class="btn">Register</button>
 </fieldset>
 </form>
 </div>
