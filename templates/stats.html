@@ -32,26 +32,27 @@
         </div>
 
         <h4>College Stats</h4>
-        <p>Pomona</p>
-        <div class="progress progress-info">
-            <div class="bar" style="width: {{po*100}}%;"></div>
-        </div>
-        <p>CMC</p>
-        <div class="progress progress-info">
-            <div class="bar" style="width: {{cm*100}}%;"></div>
-        </div>
-        <p>Harvey Mudd</p>
-        <div class="progress progress-success">
-            <div class="bar" style="width: {{hm*100}}%;"></div>
-        </div>
-        <p>Pitzer</p>
-        <div class="progress progress-success">
-            <div class="bar" style="width: {{pz*100}}%;"></div>
-        </div>
-        <p>Scripps</p>
-        <div class="progress progress-success">
-            <div class="bar" style="width: {{sc*100}}%;"></div>
-        </div>
+        <div id="cStats" class="graph"></div>
+        <!--<p>Pomona</p>-->
+        <!--<div class="progress progress-info">-->
+            <!--<div class="bar" style="width: {{po*100}}%;"></div>-->
+        <!--</div>-->
+        <!--<p>CMC</p>-->
+        <!--<div class="progress progress-info">-->
+            <!--<div class="bar" style="width: {{cm*100}}%;"></div>-->
+        <!--</div>-->
+        <!--<p>Harvey Mudd</p>-->
+        <!--<div class="progress progress-success">-->
+            <!--<div class="bar" style="width: {{hm*100}}%;"></div>-->
+        <!--</div>-->
+        <!--<p>Pitzer</p>-->
+        <!--<div class="progress progress-success">-->
+            <!--<div class="bar" style="width: {{pz*100}}%;"></div>-->
+        <!--</div>-->
+        <!--<p>Scripps</p>-->
+        <!--<div class="progress progress-success">-->
+            <!--<div class="bar" style="width: {{sc*100}}%;"></div>-->
+        <!--</div>-->
         {% if verified %}
             <a class="btn btn-success" href="{{ url_for('newGame') }}">New Game</a>
         {% else %}
@@ -61,4 +62,20 @@
 </div>
 {% endblock %}
 
-
+{% block script %}
+<script src="/static/js/jquery.flot.min.js"></script>
+<script src="/static/js/jquery.flot.pie.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var data = [
+            { label: "Pomona", data:{{ po*100 }} },
+            { label: "CMC", data:{{ cm*100 }} },
+            { label: "Harvey Mudd", data:{{ hm*100 }} },
+            { label: "Pitzer", data:{{ pz*100 }} },
+            { label: "Scripps", data:{{ sc*100 }} }
+        ];
+        $.plot($("#cStats"), data, 
+            { series: { pie: { show: true } }, legend: { show: false } }
+        );
+    });
+</script>
