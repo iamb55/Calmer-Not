@@ -154,8 +154,6 @@ def confirm():
 def newGame():
     currentUser = User.query.get(session.get("user_id"))
     if not currentUser.verified: 
-        flash('You need to verify your 5C email address before you can play a game.' +
-                ' Click the confirmation link in the email we sent you.', 'info')
         return redirect(url_for('stats'))
     next = nextGame(currentUser.school)
     if not next:
