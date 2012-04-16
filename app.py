@@ -53,7 +53,10 @@ def stats():
     total = 1.0 if total == 0 else total
     percents = map(lambda x: x / total, scores)
     gamesPlayed = float(1 if user.gamesPlayed == 0 else user.gamesPlayed)
-    return render_template('stats.html', wins=user.score, 
+    if not user.verified: 
+        flash('You need to verify your 5C email address by clicking the confirmation link in the email we sent to you.', 'info')
+    return render_template('stats.html', verified=user.verified,
+                                         wins=user.score, 
                                          percent=(user.score/gamesPlayed), 
                                          games=user.gamesPlayed,
                                          po=percents[0], 

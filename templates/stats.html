@@ -52,7 +52,7 @@
         <div class="progress progress-success">
             <div class="bar" style="width: {{sc*100}}%;"></div>
         </div>
-        <a class="btn btn-success" href="{{ url_for('newGame') }}">New Game</a>
+        <a class="btn btn-success {{ ('disabled, '')[verified] }}" href="{{ url_for('newGame') }}">New Game</a>
     </div>
 </div>
 {% endblock %}
