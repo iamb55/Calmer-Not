@@ -54,7 +54,8 @@ def stats():
     percents = map(lambda x: x / total, scores)
     gamesPlayed = float(1 if user.gamesPlayed == 0 else user.gamesPlayed)
     if not user.verified: 
-        flash('You need to verify your 5C email address by clicking the confirmation link in the email we sent to you.', 'info')
+        flash('You need to verify your 5C email address before you can play a game.' +
+                ' Click the confirmation link in the email we sent you.', 'info')
     return render_template('stats.html', verified=user.verified,
                                          wins=user.score, 
                                          percent=(user.score/gamesPlayed), 
@@ -82,7 +83,6 @@ def login():
     # user exists and authed
     if user:
         session['user_id']  = user.id
-        flash('You were successfully logged in.', 'success')
         return redirect(url_for('stats'))
     # invalid u or p
     else:
@@ -133,7 +133,6 @@ def validate():
 @app.route('/confirm', methods=['GET'])
 def confirm():
     key = request.args.get('confkey')
-
     if key == None:
         flash(u'That confirmation key is invalid.', 'error')
         return redirect(url_for('index'))
@@ -141,7 +140,6 @@ def confirm():
     if id == None:
         flash(u'That user does not exist.', 'error')
         return redirect(url_for('index'))
-
     r.delete(key)
     user = User.query.get(user_id)
     user.verified = True
@@ -155,6 +153,10 @@ def confirm():
 @login_required
 def newGame():
     currentUser = User.query.get(session.get("user_id"))
+    if not currentUser.verified: 
+        flash('You need to verify your 5C email address before you can play a game.' +
+                ' Click the confirmation link in the email we sent you.', 'info')
+        return redirect(url_for('stats'))
     next = nextGame(currentUser.school)
     if not next:
         score = None

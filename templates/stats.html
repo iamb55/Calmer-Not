@@ -52,7 +52,11 @@
         <div class="progress progress-success">
             <div class="bar" style="width: {{sc*100}}%;"></div>
         </div>
-        <a class="btn btn-success {{ ('disabled', '')[verified] }}" href="{{ url_for('newGame') }}">New Game</a>
+        {% if verified %}
+            <a class="btn btn-success" href="{{ url_for('newGame') }}">New Game</a>
+        {% else %}
+            <a class="btn btn-success disabled" href="#">New Game</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
